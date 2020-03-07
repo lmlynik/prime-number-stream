@@ -7,7 +7,7 @@ import scala.language.postfixOps
 import akka.actor.ActorSystem
 import akka.grpc.GrpcClientSettings
 import akka.stream.scaladsl.Sink
-import com.mlynik.prime.numbers.GetPrimesReply.Result.{Finished, Value}
+import com.mlynik.prime.numbers.GetPrimesReply.Result.{Finished, Value, Error => PrimeError}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.Span
@@ -59,6 +59,16 @@ class PrimeNumberSpec
         GetPrimesReply(Value(13)),
         GetPrimesReply(Value(17)),
         GetPrimesReply(Finished(true))
+      )
+    }
+
+    "return error on negative" in {
+      val reply = client.getPrimes(GetPrimesRequest(-1)).runWith(Sink.seq)
+
+      val results = reply.futureValue
+
+      results shouldBe Seq(
+        GetPrimesReply(PrimeError("negative number")),
       )
     }
   }

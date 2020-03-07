@@ -33,6 +33,9 @@ lazy val proxyService = (project in file("proxy-service"))
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "ch.qos.logback" % "logback-classic" % "1.2.3",
+      "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
+      "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % "test",
       "org.scalatest" %% "scalatest" % "3.0.8" % "test"
     )
   )

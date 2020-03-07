@@ -1,8 +1,9 @@
 package com.mlynik.prime.numbers
+
 import akka.NotUsed
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
-import com.mlynik.prime.numbers.GetPrimesReply.Result.{Finished, Value}
+import com.mlynik.prime.numbers.GetPrimesReply.Result.{Finished, Value, Error => PrimeError}
 
 class PrimeNumberServiceImpl()(implicit mat: Materializer) extends PrimeNumberService {
   //https://gist.githubusercontent.com/mattfowler/62f1be4fbe6d36c0a9d84c94817389ba/raw/468c3e76198db648138902881b7d91dde1994e4d/PrimesStream.scala
@@ -12,10 +13,13 @@ class PrimeNumberServiceImpl()(implicit mat: Materializer) extends PrimeNumberSe
     Stream.from(3, 2).takeWhile(_ <= end).diff(composites)
   }
 
-  override def getPrimes(in: GetPrimesRequest): Source[GetPrimesReply, NotUsed] = {
-    Source(calculatePrimesStream(in.value) append Stream(-1)).map {
-      case -1 => GetPrimesReply(Finished(true))
-      case p => GetPrimesReply(Value(p))
-    }
+  override def getPrimes(in: GetPrimesRequest): Source[GetPrimesReply, NotUsed] = in match {
+    case GetPrimesRequest(value) if value < 0 =>
+      Source.single(GetPrimesReply(PrimeError("negative number")))
+    case GetPrimesRequest(value) =>
+      Source(calculatePrimesStream(value) append Stream(-1)).map {
+        case -1 => GetPrimesReply(Finished(true))
+        case p => GetPrimesReply(Value(p))
+      }
   }
 }

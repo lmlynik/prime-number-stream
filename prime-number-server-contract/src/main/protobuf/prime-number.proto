@@ -15,6 +15,6 @@ message GetPrimesReply {
     oneof result {
         int32 value = 1;
         bool finished = 2;
+        string error = 3;
     }
-
 }
