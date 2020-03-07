@@ -27,7 +27,7 @@ class PrimeNumberSpec
     val conf = ConfigFactory.parseString("akka.http.server.preview.enable-http2 = on")
       .withFallback(ConfigFactory.defaultApplication())
     val sys = ActorSystem("PrimeNumberServer", conf)
-    val bound = new PrimeNuberServer(sys).run()
+    val bound = new PrimeNumberServer(sys).run()
     // make sure server is bound before using client
     bound.futureValue
     sys
@@ -37,7 +37,7 @@ class PrimeNumberSpec
 
   val client = {
     implicit val ec = clientSystem.dispatcher
-    PrimeNumberServiceClient(GrpcClientSettings.fromConfig("PrimeNumberService"))
+    PrimeNumberServiceClient(GrpcClientSettings.fromConfig(PrimeNumberService.name))
   }
 
   override def afterAll: Unit = {

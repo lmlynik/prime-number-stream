@@ -13,8 +13,7 @@ class PrimeNumberServiceImpl()(implicit mat: Materializer) extends PrimeNumberSe
   }
 
   override def getPrimes(in: GetPrimesRequest): Source[GetPrimesReply, NotUsed] = {
-
-    Source(calculatePrimesStream(in.value) #::: Stream(-1)).map {
+    Source(calculatePrimesStream(in.value) append Stream(-1)).map {
       case -1 => GetPrimesReply(Finished(true))
       case p => GetPrimesReply(Value(p))
     }

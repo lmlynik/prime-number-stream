@@ -10,36 +10,30 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object PrimeNumberServer {
   def main(args: Array[String]): Unit = {
-    // Important: enable HTTP/2 in ActorSystem's config
-    // We do it here programmatically, but you can also set it in the application.conf
     val conf = ConfigFactory
       .parseString("akka.http.server.preview.enable-http2 = on")
       .withFallback(ConfigFactory.defaultApplication())
-    val system = ActorSystem("HelloWorld", conf)
-    new PrimeNuberServer(system).run()
-    // ActorSystem threads will keep the app alive until `system.terminate()` is called
+    val system = ActorSystem("PrimeNumberServer", conf)
+    new PrimeNumberServer(system).run()
   }
 }
 
-class PrimeNuberServer(system: ActorSystem) {
+class PrimeNumberServer(system: ActorSystem) {
   def run(): Future[Http.ServerBinding] = {
-    // Akka boot up code
+
     implicit val sys: ActorSystem = system
     implicit val mat: Materializer = ActorMaterializer()
     implicit val ec: ExecutionContext = sys.dispatcher
 
-    // Create service handlers
     val service: HttpRequest => Future[HttpResponse] =
       PrimeNumberServiceHandler(new PrimeNumberServiceImpl())
 
-    // Bind service handler servers to localhost:8080/8081
     val binding = Http().bindAndHandleAsync(
       service,
       interface = "127.0.0.1",
-      port = 8080,
+      port = 5000,
       connectionContext = HttpConnectionContext())
 
-    // report successful binding
     binding.foreach { binding =>
       println(s"gRPC server bound to: ${binding.localAddress}")
     }
