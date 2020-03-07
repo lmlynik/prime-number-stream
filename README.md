@@ -30,16 +30,16 @@ sbt proxyService/run
 
 ## Result
 
-This in this experiment I choose to stick with Akka, as the toolkit provides all tools needs to conduct this experiment.
+In this experiment I choose to stick with Akka, as the toolkit provides all tools needs to conduct this experiment.
 
 *Akka gRPC* provides ability to generate scala server and client code based on protobuf files.
 
 *Akka HTTP* provides a platform to host the gRPC endpoint as well creating HTTP endpoint for the proxy service.
 
-Wording in the task _continuously streams all prime numbers_ mentioned that the results should be streamed.
-gRPC provides this capability, but I decided to experiment with Server Sent Events, as I never had a chance to do it before.
+Wording in the task `continuously streams all prime numbers` mentioned that the results should be streamed.
+gRPC provides this capability, but I decided to experiment additionally with Server Sent Events on the proxy server, as I never had a chance to do it before.
 
-Results are quite interesting as currently this indeed streams the prime numbers in realtime end-to-end.
+Results are quite interesting as currently this indeed streams the prime numbers in realtime end-to-end. This solution definitely benefits from small memory footprint.
 
 ## What can be done better
 
