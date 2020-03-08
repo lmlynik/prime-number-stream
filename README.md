@@ -26,6 +26,7 @@ uses proper abstractions to communicate failure
 sbt primeNumberServer/run
 sbt proxyService/run
 
+curl localhost:8080/primes/1000000 //watch it stream
 ```
 
 ## Result
